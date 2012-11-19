@@ -1,4 +1,18 @@
 {
+    "penzu": {
+        "name": "Penzu API",
+        "protocol": "https",
+        "baseURL": "penzu.com",
+        "publicPath": "/api",
+        "booleanTrueVal": "1",
+        "booleanFalseVal": "0",
+        "auth": "oauth",
+        "oauth": {
+             "type": "penzu",
+             "version": "1.0",
+             "crypt": "HMAC-SHA1"
+        }
+    },
     "klout": {
         "name": "Klout API",
         "protocol": "http",

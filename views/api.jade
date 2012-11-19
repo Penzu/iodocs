@@ -28,16 +28,30 @@ form#credentials
                  - var defaultSecret =apiInfo.auth.defaultSecret
              - else
                  - var defaultSecret =''
-             div
-                 label(for='key') API Key
-                 input(id='key', name='key', value=defaultKey, style='color=#EEEEEE')
-             div
-                 - if (apiInfo.oauth || apiInfo.signature)
-                     label(for='secret') Shared Secret
-                     input(id='secret', name='secret', value=defaultSecret, style='color=#EEEEEE')
-             - if (apiInfo.oauth && apiInfo.oauth.type !='two-legged')
+             - if (apiInfo.oauth && apiInfo.oauth.type == 'penzu')
                  div
-                    input(name='oauth', value='Authenticate with OAuth', type='submit', id='oauth-auth')
+                     label(for='token') Token
+                     input(id='token', name='token', value=defaultKey, style='color=#EEEEEE')
+                 div
+                     label(for='tokenSecret') Token Secret
+                     input(id='tokenSecret', name='tokenSecret', value=defaultKey, style='color=#EEEEEE')
+                 div
+                     label(for='clientKey')  Client Key
+                     input(id='clientKey', name='clientKey', value=defaultSecret, style='color=#EEEEEE')
+                 div
+                      label(for='clientSecret') Client Secret
+                      input(id='clientSecret', name='clientSecret', value=defaultKey, style='color=#EEEEEE')
+             - else 
+                 div
+                     label(for='key') API Key
+                     input(id='key', name='key', value=defaultKey, style='color=#EEEEEE')
+                 div
+                     - if (apiInfo.oauth || apiInfo.signature)
+                         label(for='secret')  Secret
+                         input(id='secret', name='secret', value=defaultSecret, style='color=#EEEEEE')
+                 - if (apiInfo.oauth && apiInfo.oauth.type !='two-legged')
+                     div
+                        input(name='oauth', value='Authenticate with OAuth', type='submit', id='oauth-auth')
 
 div(id='controls')
     ul

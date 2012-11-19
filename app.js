@@ -128,15 +128,29 @@ function oauth(req, res, next) {
     if (apiConfig.oauth) {
         var apiKey = req.body.apiKey || req.body.key,
             apiSecret = req.body.apiSecret || req.body.secret,
+            token = req.body.token,
+            tokenSecret = req.body.tokenSecret,
+            clientKey = req.body.clientKey,
+            clientSecret = req.body.clientSecret,
             refererURL = url.parse(req.headers.referer),
-            callbackURL = refererURL.protocol + '//' + refererURL.host + '/authSuccess/' + apiName,
-            oa = new OAuth(apiConfig.oauth.requestURL,
+            callbackURL = refererURL.protocol + '//' + refererURL.host + '/authSuccess/' + apiName;
+            if (apiConfig.oauth.type == 'penzu') {
+                console.log("CALLING NEW OAUTH SIGNAUTRE");
+                oa = new OAuth(token,
+                               tokenSecret,
+                               clientKey,
+                               clientSecret,
+                               apiConfig.oauth.version,
+                               apiConfig.oauth.crypt);
+            } else {
+                oa = new OAuth(apiConfig.oauth.requestURL,
                            apiConfig.oauth.accessURL,
                            apiKey,
                            apiSecret,
                            apiConfig.oauth.version,
                            callbackURL,
                            apiConfig.oauth.crypt);
+            }
 
         if (config.debug) {
             console.log('OAuth type: ' + apiConfig.oauth.type);
@@ -144,6 +158,10 @@ function oauth(req, res, next) {
             console.log('Session authed: ' + req.session[apiName]);
             console.log('apiKey: ' + apiKey);
             console.log('apiSecret: ' + apiSecret);
+            console.log('token: ' + token);
+            console.log('tokenSecret: ' + tokenSecret);
+            console.log('clientKey: ' + clientKey);
+            console.log('clientSecret: ' + clientSecret);
         };
 
         // Check if the API even uses OAuth, then if the method requires oauth, then if the session is not authed
@@ -281,6 +299,10 @@ function processRequest(req, res, next) {
         httpMethod = reqQuery.httpMethod,
         apiKey = reqQuery.apiKey,
         apiSecret = reqQuery.apiSecret,
+        token = reqQuery.token,
+        tokenSecret = reqQuery.tokenSecret,
+        clientKey = reqQuery.clientKey,
+        clientSecret = reqQuery.clientSecret,
         apiName = reqQuery.apiName
         apiConfig = apisConfig[apiName],
         key = req.sessionID + ':' + apiName;
@@ -386,12 +408,27 @@ function processRequest(req, res, next) {
                     });
                 }
             );
-        } else if (apiConfig.oauth.type == 'two-legged' && reqQuery.oauth == 'authrequired') { // Two-legged
+        } else if ((apiConfig.oauth.type == 'two-legged' || apiConfig.oauth.type == "penzu" ) && reqQuery.oauth == 'authrequired') { // Two-legged
             if (config.debug) {
-                console.log('Two Legged OAuth');
+                console.log('Oauth type = ' + apiConfig.oauth.type);
             };
 
-            var body,
+            if (options.protocol === 'https' || options.protocol === 'https:') {
+                console.log('Protocol: HTTPS');
+                options.protocol = 'https';
+            } else if (options.protocol === 'http' || options.protocol === 'http:') {
+                console.log('Protocol: HTTP');
+                options.protocol = 'http';
+            } 
+            var body;
+            if (apiConfig.oauth.type == 'penzu') {
+                oa = new OAuth(token,
+                               tokenSecret,
+                               clientKey,
+                               clientSecret,
+                               apiConfig.oauth.version,
+                               apiConfig.oauth.crypt);
+            } else {
                 oa = new OAuth(null,
                                null,
                                apiKey || null,
@@ -399,6 +436,7 @@ function processRequest(req, res, next) {
                                apiConfig.oauth.version || null,
                                null,
                                apiConfig.oauth.crypt);
+            }
 
             var resource = options.protocol + '://' + options.host + options.path,
                 cb = function(error, data, response) {
@@ -476,15 +514,28 @@ function processRequest(req, res, next) {
             options.path += ((paramString.length > 0) ? '?' + paramString : "");
         }
 
-        // Add API Key to params, if any.
-        if (apiKey != '' && apiKey != 'undefined' && apiKey != undefined) {
-            if (options.path.indexOf('?') !== -1) {
-                options.path += '&';
+        if(apiConfig.oauth && apiConfig.oauth.type == "penzu") {
+            // Add token to params, if any
+            if (token != '' && token != 'undefined' && token != undefined) {
+                if (options.path.indexOf('?') !== -1) {
+                    options.path += '&';
+                }
+                else {
+                    options.path += '?';
+                }
+                options.path += apiConfig.keyParam + '=' + token;
             }
-            else {
-                options.path += '?';
+        } else {
+            // Add API Key to params, if any.
+            if (apiKey != '' && apiKey != 'undefined' && apiKey != undefined) {
+                if (options.path.indexOf('?') !== -1) {
+                    options.path += '&';
+                }
+                else {
+                    options.path += '?';
+                }
+                options.path += apiConfig.keyParam + '=' + apiKey;
             }
-            options.path += apiConfig.keyParam + '=' + apiKey;
         }
 
         // Perform signature routine, if any.
@@ -544,7 +595,7 @@ function processRequest(req, res, next) {
         var doRequest;
         if (options.protocol === 'https' || options.protocol === 'https:') {
             console.log('Protocol: HTTPS');
-            options.protocol = 'https:'
+            options.protocol = 'https:';
             doRequest = https.request;
         } else {
             console.log('Protocol: HTTP');

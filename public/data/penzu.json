@@ -1,0 +1,996 @@
+{
+   "endpoints":[
+      {
+         "name":"User",
+         "methods":[
+            {
+               "MethodName":"login",
+               "Synopsis":"Logs a user in and sets the oauth token",
+               "HTTPMethod":"POST",
+               "URI":"/user/login",
+               "RequiresOAuth":"N",
+               "parameters":[
+                  {
+                      "Name": "email",
+                      "Required": "Y",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The email address of the user"
+                  },
+                  {
+                      "Name": "password",
+                      "Required": "Y",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The password for the email address"
+                  },
+                  {
+                      "Name": "client",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The descriptor for the client device.  Current known values are penzu_ios and penzu_android.  Assigned value of penzu_ios if none provided."
+                  }
+               ]
+            },
+            {
+               "MethodName":"gopro_and_login",
+               "Synopsis":"Creates or updates a user to pro, and then logs them in",
+               "HTTPMethod":"POST",
+               "URI":"/user/gopro_and_login",
+               "RequiresOAuth":"N",
+               "parameters":[
+                  {
+                      "Name": "email",
+                      "Required": "Y",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The email address of the user"
+                  },
+                  {
+                      "Name": "password",
+                      "Required": "Y",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The password for the email address"
+                  },
+                  {
+                      "Name": "retype_password",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "Required only if upgrade is not present or false"
+                  },
+                  {
+                     "Name": "upgrade",
+                     "Required": "N",
+                     "Type": "string",
+                     "Description": "If present, indicates that we are upgrading an existing user"
+                  },
+                  {
+                     "Name": "first_name",
+                     "Required": "N",
+                     "Type": "string",
+                     "Description": "First name of the user."
+                  },
+                  {
+                     "Name": "last_name",
+                     "Required": "N",
+                     "Type": "string",
+                     "Description": "Last name of the user."
+                  },
+                  {
+                     "Name": "full_name",
+                     "Required": "N",
+                     "Type": "string",
+                     "Description": "Full name of the registering user, first name followed by last name"
+                  },
+                  {
+                      "Name": "client",
+                      "Required": "N",
+                      "Default": "penzu_ios",
+                      "Type": "string",
+                      "Description": "The descriptor for the client device.  Current known values are penzu_ios and penzu_android"
+                  }
+               ]
+            },
+            {
+               "MethodName":"download",
+               "Synopsis":"Pulls down all information needed for a client app session in one go. Includes all active journals, 15 most recent entries in each, and visible photos for each entry.",
+               "HTTPMethod":"GET",
+               "URI":"/user/download",
+               "RequiresOAuth":"Y",
+               "parameters":[
+               ]
+            },
+            {
+               "MethodName":"verify_existing",
+               "Synopsis":"Verifies that the user for the given credentials exists and is not a Pro user",
+               "HTTPMethod":"GET",
+               "URI":"/user/verify_existing",
+               "RequiresOAuth":"N",
+               "parameters":[
+                  {
+                      "Name": "email",
+                      "Required": "Y",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The email address of the user"
+                  },
+                  {
+                      "Name": "password",
+                      "Required": "Y",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The password for the email address"
+                  }
+               ]
+            },
+            {
+               "MethodName":"verify_new",
+               "Synopsis":"Verifies all provided user account information to see if it would pass create-validation, without actually saving the object. Only email is required, all other values are verified only if they were provided.",
+               "HTTPMethod":"GET",
+               "URI":"/user/verify_existing",
+               "RequiresOAuth":"N",
+               "parameters":[
+                  {
+                      "Name": "email",
+                      "Required": "Y",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The email address of the user"
+                  },
+                  {
+                      "Name": "password",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The password for the email address"
+                  },
+                  {
+                      "Name": "retype_password",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "Required only if upgrade is not present or false"
+                  },
+                  {
+                     "Name": "full_name",
+                     "Required": "N",
+                     "Type": "string",
+                     "Description": "Full name of the registering user, first name followed by last name.  Can either use this, or first and last name fields below."
+                  },
+                  {
+                     "Name": "first_name",
+                     "Required": "N",
+                     "Type": "string",
+                     "Description": "First name of the user."
+                  },
+                  {
+                     "Name": "last_name",
+                     "Required": "N",
+                     "Type": "string",
+                     "Description": "Last name of the user."
+                  }
+               ]
+            }
+         ]
+      },
+      {
+         "name":"Journal",
+         "methods":[
+            {
+               "MethodName":"index",
+               "Synopsis":"Gets a list of the journals for the authenticated user",
+               "HTTPMethod":"GET",
+               "URI":"/journals",
+               "RequiresOAuth":"Y",
+               "parameters":[
+               ]
+            },
+            {
+               "MethodName":"show",
+               "Synopsis":"Gets the specified journal",
+               "HTTPMethod":"GET",
+               "URI":"/journals/:id",
+               "RequiresOAuth":"Y",
+               "parameters":[
+                  {
+                      "Name": "id",
+                      "Required": "Y",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The ID of the Journal (can be appended to the path of the URL)"
+                  }
+               ]
+            },
+            {
+               "MethodName":"create",
+               "Synopsis":"Creates a new journal for the authenticated user from the provided parameters",
+               "HTTPMethod":"POST",
+               "URI":"/journals",
+               "RequiresOAuth":"Y",
+               "parameters":[
+                  {
+                      "Name": "name",
+                      "Required": "Y",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The name of the journal"
+                  },
+                  {
+                      "Name": "created",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "int",
+                      "Description": "The time this journal was created, in seconds from epoch. Sets the created_at value"
+                  },
+                  {
+                      "Name": "created_at",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "int",
+                      "Description": "The time this journal was created, in seconds from epoch. Sets the created_at value"
+                  },
+                  {
+                      "Name": "modified",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "int",
+                      "Description": "The time this journal was modified, in seconds from epoch. Sets the modified_at value"
+                  },
+                  {
+                      "Name": "modified_at",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "int",
+                      "Description": "The time this journal was modified, in seconds from epoch. Sets the modified_at value"
+                  },
+                  {
+                      "Name": "updated",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "int",
+                      "Description": "The time this journal was last updated, in seconds from epoch. Sets the last_update value"
+                  },
+                  {
+                      "Name": "last_update",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "int",
+                      "Description": "The time this journal was last updated, in seconds from epoch. Sets the last_update value"
+                  },
+                  {
+                      "Name": "locked",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "int",
+                      "Description": "Indicates if the journal is locked.  A value of 1 is true, 0 is false."
+                  },
+                  {
+                      "Name": "lock_type_id",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "int",
+                      "Description": "The type of lock the journal has applied."
+                  },
+                  {
+                      "Name": "password",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The Bcrypt hashed value of the password used ot lock the journals"
+                  },
+                  {
+                      "Name": "password_hash",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The Bcrypt hashed value of the password used ot lock the journals"
+                  },
+                  {
+                      "Name": "password_hint",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "Hint for password"
+                  },
+                  {
+                      "Name": "status",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The status of the Journal.  Set to Active if not provided or not a valid status."
+                  }
+               ]
+            },
+            {
+               "MethodName":"update",
+               "Synopsis":"Updates the specified Journal",
+               "HTTPMethod":"PUT",
+               "URI":"/journals/:id",
+               "RequiresOAuth":"Y",
+               "parameters":[
+                  {
+                      "Name": "id",
+                      "Required": "Y",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The ID of the Journal (can be appended to the path of the URL)"
+                  },
+                  {
+                      "Name": "lock",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "int",
+                      "Description": "Indicates the journal is locked."
+                  },
+                  {
+                      "Name": "lock_type_id",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "int",
+                      "Description": "The type of lock the journal has applied."
+                  },
+                  {
+                      "Name": "unlock",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "int",
+                      "Description": "Indicates the journal is to be unlocked."
+                  },
+                  {
+                      "Name": "plain_password",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The password for the journal.  Required if lock or unlock is set"
+                  },
+                  {
+                      "Name": "retype_password",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The password for the journal.  Required if lock is set"
+                  },
+                  {
+                      "Name": "password_hint",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "Hint for password"
+                  },
+                  {
+                      "Name": "name",
+                      "Required": "Y",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The name of the journal"
+                  },
+                  {
+                      "Name": "created",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "int",
+                      "Description": "The time this journal was created, in seconds from epoch. Sets the created_at value"
+                  },
+                  {
+                      "Name": "created_at",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "int",
+                      "Description": "The time this journal was created, in seconds from epoch. Sets the created_at value"
+                  },
+                  {
+                      "Name": "modified",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "int",
+                      "Description": "The time this journal was modified, in seconds from epoch. Sets the modified_at value"
+                  },
+                  {
+                      "Name": "modified_at",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "int",
+                      "Description": "The time this journal was modified, in seconds from epoch. Sets the modified_at value"
+                  },
+                  {
+                      "Name": "updated",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "int",
+                      "Description": "The time this journal was last updated, in seconds from epoch. Sets the last_update value"
+                  },
+                  {
+                      "Name": "last_update",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "int",
+                      "Description": "The time this journal was last updated, in seconds from epoch. Sets the last_update value"
+                  },
+                  {
+                      "Name": "status",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The status of the Journal.  Set to Active if not provided or not a valid status."
+                  }
+               ]
+            },
+            {
+               "MethodName":"destroy",
+               "Synopsis":"Deletes the specified Journal and all entries within it",
+               "HTTPMethod":"DELETE",
+               "URI":"/journals/:id",
+               "RequiresOAuth":"Y",
+               "parameters":[
+                  {
+                      "Name": "id",
+                      "Required": "Y",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The ID of the Journal (can be appended to the path of the URL)"
+                  }
+               ]
+            }
+         ]
+      },
+      {
+         "name":"Entry",
+         "methods":[
+            {
+               "MethodName":"index",
+               "Synopsis":"Gets a list of the entries in the specified journal for the authenticated user",
+               "HTTPMethod":"GET",
+               "URI":"/journals/:journal_id/entries",
+               "RequiresOAuth":"Y",
+               "parameters":[
+                  {
+                      "Name": "journal_id",
+                      "Required": "Y",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The ID of the Journal"
+                  }
+               ]
+            },
+            {
+               "MethodName":"show",
+               "Synopsis":"Gets the specified Entry",
+               "HTTPMethod":"GET",
+               "URI":"/journals/:journal_id/entries/:entry_id",
+               "RequiresOAuth":"Y",
+               "parameters":[
+                  {
+                      "Name": "journal_id",
+                      "Required": "Y",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The ID of the Journal"
+                  },
+                  {
+                      "Name": "entry_id",
+                      "Required": "Y",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The ID of the Entry"
+                  }
+               ]
+            },
+            {
+               "MethodName":"create",
+               "Synopsis":"Creates a new Entry in the specified journal",
+               "HTTPMethod":"POST",
+               "URI":"/journals/:journal_id/entries",
+               "RequiresOAuth":"Y",
+               "parameters":[
+                  {
+                      "Name": "journal_id",
+                      "Required": "Y",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The ID of the Journal"
+                  },
+                  {
+                      "Name": "title",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The title of the entry"
+                  },
+                  {
+                      "Name": "body",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The body of the entry"
+                  },
+                  {
+                      "Name": "locked",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "int",
+                      "Description": "Indicates if the entry is locked.  A value of 1 is true, 0 is false."
+                  },
+                  {
+                      "Name": "password",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The Bcrypt hashed value of the password used to lock the entry"
+                  },
+                  {
+                      "Name": "password_hash",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The Bcrypt hashed value of the password used to lock the entry"
+                  },
+                  {
+                      "Name": "password_hint",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "Hint for password"
+                  },
+                  {
+                      "Name": "created",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "int",
+                      "Description": "The time this entry was created, in seconds from epoch. Sets the created_at value"
+                  },
+                  {
+                      "Name": "created_at",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "int",
+                      "Description": "The time this entry was created, in seconds from epoch. Sets the created_at value"
+                  },
+                  {
+                      "Name": "modified",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "int",
+                      "Description": "The time this entry was modified, in seconds from epoch. Sets the modified_at value"
+                  },
+                  {
+                      "Name": "modified_at",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "int",
+                      "Description": "The time this entry was modified, in seconds from epoch. Sets the modified_at value"
+                  },
+                  {
+                      "Name": "opened",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "int",
+                      "Description": "The time this entry was last opened, in seconds from epoch. Sets the opened_at value"
+                  },
+                  {
+                      "Name": "opened_at",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "int",
+                      "Description": "The time this entry was last opened, in seconds from epoch. Sets the opened_at value"
+                  },
+                  {
+                      "Name": "status",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The status of the Entry.  Set to Active if not provided or not a valid status."
+                  }
+               ]
+            },
+            {
+               "MethodName":"update",
+               "Synopsis":"Updates the specified Entry",
+               "HTTPMethod":"PUT",
+               "URI":"/journals/:journal_id/entries/:entry_id",
+               "RequiresOAuth":"Y",
+               "parameters":[
+                  {
+                      "Name": "journal_id",
+                      "Required": "Y",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The ID of the Journal"
+                  },
+                  {
+                      "Name": "entry_id",
+                      "Required": "Y",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The ID of the Entry"
+                  },
+                  {
+                      "Name": "title",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The title of the entry"
+                  },
+                  {
+                      "Name": "body",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The body of the entry"
+                  },
+                  {
+                     "Name": "append_index",
+                     "Required": "N",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The index in the body where new plaintext has been appended to existing rich text."
+                  },
+                  {
+                      "Name": "locked",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "int",
+                      "Description": "Indicates if the entry is locked.  A value of 1 is true, 0 is false."
+                  },
+                  {
+                      "Name": "password",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The Bcrypt hashed value of the password used to lock the entry"
+                  },
+                  {
+                      "Name": "password_hash",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The Bcrypt hashed value of the password used to lock the entry"
+                  },
+                  {
+                      "Name": "password_hint",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "Hint for password"
+                  },
+                  {
+                      "Name": "created",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "int",
+                      "Description": "The time this entry was created, in seconds from epoch. Sets the created_at value"
+                  },
+                  {
+                      "Name": "created_at",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "int",
+                      "Description": "The time this entry was created, in seconds from epoch. Sets the created_at value"
+                  },
+                  {
+                      "Name": "modified",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "int",
+                      "Description": "The time this entry was modified, in seconds from epoch. Sets the modified_at value"
+                  },
+                  {
+                      "Name": "modified_at",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "int",
+                      "Description": "The time this entry was modified, in seconds from epoch. Sets the modified_at value"
+                  },
+                  {
+                      "Name": "opened",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "int",
+                      "Description": "The time this entry was last opened, in seconds from epoch. Sets the opened_at value"
+                  },
+                  {
+                      "Name": "opened_at",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "int",
+                      "Description": "The time this entry was last opened, in seconds from epoch. Sets the opened_at value"
+                  },
+                  {
+                      "Name": "status",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The status of the Entry.  Set to Active if not provided or not a valid status."
+                  },
+                  {
+                      "Name": "lock",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "int",
+                      "Description": "Indicates the entry is locked."
+                  },
+                  {
+                      "Name": "lock_type_id",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "int",
+                      "Description": "The type of lock the entry has applied."
+                  },
+                  {
+                      "Name": "unlock",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "int",
+                      "Description": "Indicates the journal is to be unlocked."
+                  },
+                  {
+                      "Name": "plain_password",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The password for the journal.  Required if lock or unlock is set"
+                  },
+                  {
+                      "Name": "retype_password",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The password for the journal.  Required if lock is set"
+                  },
+                  {
+                      "Name": "password_hint",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "Hint for password"
+                  },
+                  {
+                      "Name": "make_editable",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "If present, indicates that the entire entry should be made editable"
+                  },
+                  {
+                      "Name": "remove_photo",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "int",
+                      "Description": "ID of the photo that should be removed from the entry"
+                  }
+               ]
+            },
+            {
+               "MethodName":"destroy",
+               "Synopsis":"Deletes the specified Entry",
+               "HTTPMethod":"DELETE",
+               "URI":"/journals/:journal_id/entries/:entry_id",
+               "RequiresOAuth":"Y",
+               "parameters":[
+                  {
+                      "Name": "journal_id",
+                      "Required": "Y",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The ID of the Journal"
+                  },
+                  {
+                      "Name": "entry_id",
+                      "Required": "Y",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The ID of the Entry"
+                  }
+               ]
+            }
+         ]
+      },
+      {
+         "name":"Photo",
+         "methods":[
+            {
+               "MethodName":"index",
+               "Synopsis":"Gets a list of the photos for the specified entry",
+               "HTTPMethod":"GET",
+               "URI":"/journals/:journal_id/entries/:entry_id/photos",
+               "RequiresOAuth":"Y",
+               "parameters":[
+                  {
+                      "Name": "journal_id",
+                      "Required": "Y",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The ID of the Journal"
+                  },
+                  {
+                      "Name": "entry_id",
+                      "Required": "Y",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The ID of the Entry"
+                  }
+               ]
+            },
+            {
+               "MethodName":"show",
+               "Synopsis":"Gets the specified Photo",
+               "HTTPMethod":"GET",
+               "URI":"/journals/:journal_id/entries/:entry_id/photos/:photo_id",
+               "RequiresOAuth":"Y",
+               "parameters":[
+                  {
+                      "Name": "journal_id",
+                      "Required": "Y",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The ID of the Journal"
+                  },
+                  {
+                      "Name": "entry_id",
+                      "Required": "Y",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The ID of the Entry"
+                  },
+                  {
+                      "Name": "photo_id",
+                      "Required": "Y",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The ID of the Photo"
+                  }
+               ]
+            },
+            {
+               "MethodName":"create",
+               "Synopsis":"Creates and attaches a new Photo in the specified Entry",
+               "HTTPMethod":"POST",
+               "URI":"/journals/:journal_id/entries/:entry_id/photos",
+               "RequiresOAuth":"Y",
+               "parameters":[
+                  {
+                      "Name": "journal_id",
+                      "Required": "Y",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The ID of the Journal"
+                  },
+                  {
+                      "Name": "entry_id",
+                      "Required": "Y",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The ID of the Entry"
+                  },
+                  {
+                      "Name": "image",
+                      "Required": "Y",
+                      "Default": "",
+                      "Type": "image",
+                      "Description": "The image to be attached to the entry."
+                  },
+                  {
+                      "Name": "photo_position",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The integer value for the position of the photo.  Should be > 0"
+                  },
+                  {
+                      "Name": "position",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The integer value for the position of the photo.  Should be > 0"
+                  },
+                  {
+                      "Name": "photo_updated",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "int",
+                      "Description": "The time this photo was last updated, in seconds from epoch. Sets the image_updated_at value"
+                  },
+                  {
+                      "Name": "updated_at",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "int",
+                      "Description": "The time this photo was last updated, in seconds from epoch. Sets the image_updated_at value"
+                  }
+               ]
+            },
+            {
+               "MethodName":"update",
+               "Synopsis":"Updates the specified Photo",
+               "HTTPMethod":"PUT",
+               "URI":"/journals/:journal_id/entries/:entry_id/photos/:photo_id",
+               "RequiresOAuth":"Y",
+               "parameters":[
+                  {
+                      "Name": "journal_id",
+                      "Required": "Y",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The ID of the Journal"
+                  },
+                  {
+                      "Name": "entry_id",
+                      "Required": "Y",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The ID of the Entry"
+                  },
+                  {
+                      "Name": "photo_id",
+                      "Required": "Y",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The ID of the Photo"
+                  },
+                  {
+                      "Name": "modified",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The time this photo was last modified, in seconds from epoch. If a modified time is provided, and its older than the one in the DB, the photo is not updated."
+                  },
+                  {
+                      "Name": "position",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The integer value for the position of the photo.  Should be > 0"
+                  },
+                  {
+                      "Name": "photo_updated",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "int",
+                      "Description": "The time this photo was last updated, in seconds from epoch. Sets the image_updated_at value"
+                  },
+                  {
+                      "Name": "updated_at",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "int",
+                      "Description": "The time this photo was last updated, in seconds from epoch. Sets the image_updated_at value"
+                  }
+               ]
+            },
+            {
+               "MethodName":"destroy",
+               "Synopsis":"Deletes the specified Photo",
+               "HTTPMethod":"DELETE",
+               "URI":"/journals/:journal_id/entries/:entry_id/photos/:photo_id",
+               "RequiresOAuth":"Y",
+               "parameters":[
+                  {
+                      "Name": "journal_id",
+                      "Required": "Y",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The ID of the Journal"
+                  },
+                  {
+                      "Name": "entry_id",
+                      "Required": "Y",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The ID of the Entry"
+                  },
+                  {
+                      "Name": "photo_id",
+                      "Required": "Y",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The ID of the Photo"
+                  }
+               ]
+            }
+         ]
+      }
+   ]
+}
+
