@@ -243,9 +243,16 @@
                "MethodName":"update",
                "Synopsis":"Updates account information for the user",
                "HTTPMethod":"PUT",
-               "URI":"/account",
+               "URI":"/account/:id",
                "RequiresOAuth":"Y",
                "parameters":[
+                  {
+                      "Name": "id",
+                      "Required": "Y",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The ID of the user"
+                  },
                   {
                       "Name": "disable_auto_renew",
                       "Required": "Y",
