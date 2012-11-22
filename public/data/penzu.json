@@ -62,6 +62,20 @@
                       "Description": "Required only if upgrade is not present or false"
                   },
                   {
+                      "Name": "itunes_receipt_data",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "Receipt data returned from iTunes"
+                  },
+                  {
+                      "Name": "itunes_transaction_id",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "Transaction ID for the order from iTunes"
+                  },
+                  {
                      "Name": "upgrade",
                      "Required": "N",
                      "Type": "string",
@@ -91,6 +105,43 @@
                       "Default": "penzu_ios",
                       "Type": "string",
                       "Description": "The descriptor for the client device.  Current known values are penzu_ios and penzu_android"
+                  }
+               ]
+            },
+            {
+               "MethodName":"renew_and_login",
+               "Synopsis":"Renews a users' pro account based on iTunes receipt, and then logs them in",
+               "HTTPMethod":"POST",
+               "URI":"/user/renew_and_login",
+               "RequiresOAuth":"N",
+               "parameters":[
+                  {
+                      "Name": "email",
+                      "Required": "Y",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The email address of the user"
+                  },
+                  {
+                      "Name": "password",
+                      "Required": "Y",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "The password for the email address"
+                  },
+                  {
+                      "Name": "itunes_receipt_data",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "Receipt data returned from iTunes"
+                  },
+                  {
+                      "Name": "itunes_transaction_id",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "Transaction ID for the order from iTunes"
                   }
                ]
             },
@@ -173,6 +224,36 @@
                      "Description": "Last name of the user."
                   }
                ]
+            }
+         ]
+      },
+      {
+         "name":"Account",
+         "methods":[
+            {
+               "MethodName":"index",
+               "Synopsis":"Retrieves account and billing information for the authorized user",
+               "HTTPMethod":"GET",
+               "URI":"/account",
+               "RequiresOAuth":"Y",
+               "parameters":[
+               ]
+            },
+            {
+               "MethodName":"update",
+               "Synopsis":"Updates account information for the user",
+               "HTTPMethod":"PUT",
+               "URI":"/account",
+               "RequiresOAuth":"Y",
+               "parameters":[
+                  {
+                      "Name": "disable_auto_renew",
+                      "Required": "Y",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "A truthful value indicates that auto renew should be disabled for the user"
+                  }
+                ]
             }
          ]
       },

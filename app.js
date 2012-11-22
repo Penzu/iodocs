@@ -199,7 +199,7 @@ function oauth(req, res, next) {
                     res.send({ 'signin': apiConfig.oauth.signinURL + oauthToken });
                 }
             });
-        } else if (apiConfig.oauth.type == 'two-legged' && req.body.oauth == 'authrequired') {
+        } else if ((apiConfig.oauth.type == 'two-legged' || apiConfig.oauth.type == 'penzu') && req.body.oauth == 'authrequired') {
             // Two legged stuff... for now nothing.
             next();
         } else {
@@ -437,7 +437,6 @@ function processRequest(req, res, next) {
                                null,
                                apiConfig.oauth.crypt);
             }
-
             var resource = options.protocol + '://' + options.host + options.path,
                 cb = function(error, data, response) {
                     if (error) {
@@ -482,15 +481,16 @@ function processRequest(req, res, next) {
 
                     next();
                 };
-
             switch (httpMethod) {
                 case 'GET':
                     console.log(resource);
                     oa.get(resource, '', '',cb);
                     break;
                 case 'PUT':
+                    oa.put(resource, '', '', JSON.stringify(requestBody), null, cb);
+                    break;
                 case 'POST':
-                    oa.post(resource, '', '', JSON.stringify(obj), null, cb);
+                    oa.post(resource, '', '', JSON.stringify(requestBody), null, cb);
                     break;
                 case 'DELETE':
                     oa.delete(resource,'','',cb);
