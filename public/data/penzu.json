@@ -255,10 +255,17 @@
                   },
                   {
                       "Name": "disable_auto_renew",
-                      "Required": "Y",
+                      "Required": "N",
                       "Default": "",
                       "Type": "string",
                       "Description": "A truthful value indicates that auto renew should be disabled for the user"
+                  },
+                  {
+                      "Name": "downgrade",
+                      "Required": "N",
+                      "Default": "",
+                      "Type": "string",
+                      "Description": "A truthful value indicates that the users account should be downgraded"
                   }
                 ]
             }
